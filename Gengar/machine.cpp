@@ -28,3 +28,11 @@ void Machine::DownloadFile(std::string remotePath, std::string localPath)
 void Machine::TakeScreenshot()
 {
 }
+
+void Machine::StartKeySniffing()
+{
+}
+
+void Machine::StopKeySniffing()
+{
+}
