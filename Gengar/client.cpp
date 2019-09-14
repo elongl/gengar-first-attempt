@@ -1,28 +1,49 @@
+#include <iostream>
 #include <boost/asio.hpp>
 #include "client.h"
 
 using boost::asio::ip::tcp;
 
-Client::Client()
-{
-	boost::asio::io_context io_context;
-	m_sock = tcp::socket(io_context);
-}
+Client::Client() : m_sock(m_io) {}
 
 void Client::Connect()
 {
-	tcp::resolver resolver(m_sock.get_executor());
-	boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "10015"));
+	try
+	{
+		tcp::resolver resolver(m_io);
+		boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "10015"));
+	}
+	catch (std::exception& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+		exit(1);
+	}
 }
 
 void Client::Send(std::string msg)
 {
-	boost::asio::write(m_sock, boost::asio::buffer(msg));
+	try
+	{
+		boost::asio::write(m_sock, boost::asio::buffer(msg));
+	}
+	catch (std::exception& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+		exit(1);
+	}
 }
 
 std::string Client::Receive()
 {
 	std::string msg;
-	boost::asio::read(m_sock, boost::asio::buffer(msg));
-	return msg;
+	try
+	{
+		boost::asio::read(m_sock, boost::asio::buffer(msg));
+		return msg;
+	}
+	catch (std::exception& ex)
+	{
+		std::cerr << ex.what() << std::endl;
+		exit(1);
+	}
 }

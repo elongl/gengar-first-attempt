@@ -12,4 +12,3 @@ public:
 	void StartKeySniffing();
 	void StopKeySniffing();
 };
-

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <boost/asio.hpp>
 #include "client.h"
 
