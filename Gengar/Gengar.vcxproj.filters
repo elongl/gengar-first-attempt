@@ -24,18 +24,12 @@
     <ClCompile Include="machine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="client.hpp">
+    <ClInclude Include="client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="machine.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="logger.hpp">
+    <ClInclude Include="machine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

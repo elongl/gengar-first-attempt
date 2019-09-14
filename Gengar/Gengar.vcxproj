@@ -156,13 +156,11 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="Gengar.cpp" />
-    <ClCompile Include="logger.cpp" />
     <ClCompile Include="machine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="client.hpp" />
-    <ClInclude Include="logger.hpp" />
-    <ClInclude Include="machine.hpp" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="machine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

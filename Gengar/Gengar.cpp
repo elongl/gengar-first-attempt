@@ -1,17 +1,11 @@
 #include <iostream>
 #include <string>
-#include "machine.hpp"
-#include "logger.hpp"
+#include <boost/asio.hpp>
+#include "client.h"
 
 int main()
 {
-	Machine machine;
-	std::string input;
-	while (true)
-	{
-		std::cout << "Command: ";
-		std::getline(std::cin, input);
-		std::string output = machine.RunCommand(input);
-		std::cout << output << std::endl;
-	}
+	Client client;
+	client.Connect();
+	client.Send("Hello World!");
 }
