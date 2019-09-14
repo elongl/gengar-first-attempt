@@ -11,7 +11,7 @@ void Client::Connect()
 	try
 	{
 		tcp::resolver resolver(m_io);
-		boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "10015"));
+		boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "5555"));
 	}
 	catch (std::exception& ex)
 	{
