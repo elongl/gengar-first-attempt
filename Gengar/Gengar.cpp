@@ -1,14 +1,9 @@
 #include <iostream>
-#include "machine.h"
+#include "client.h"
 
 int main()
 {
-	Machine machine;
-	std::string buff;
-	while (true)
-	{
-		std::getline(std::cin, buff);
-		std::string output = machine.RunCommand(buff);
-		std::cout << output << std::endl;
-	}
+	Client client;
+	client.Connect();
+	client.Send("Hello World!");
 }

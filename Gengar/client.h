@@ -9,10 +9,9 @@ class Client
 {
 private:
 	boost::asio::io_context m_io;
-	tcp::socket m_sock;
+	tcp::socket m_sock{ m_io };
 
 public:
-	Client();
 	void Connect();
 	void Send(std::string);
 	std::string Receive();

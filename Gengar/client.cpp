@@ -4,8 +4,6 @@
 
 using boost::asio::ip::tcp;
 
-Client::Client() : m_sock(m_io) {}
-
 void Client::Connect()
 {
 	try
