@@ -23,6 +23,7 @@ std::string Machine::RunCommand(std::string command)
 	std::string data;
 	bp::ipstream out_stream, err_stream;
 
+	// Using "/bin/sh -c" on UNIX systems.
 	bp::system("cmd /c " + command, bp::std_out > out_stream, bp::std_err > err_stream);
 	ReadStream(out_stream, data);
 	ReadStream(err_stream, data);
