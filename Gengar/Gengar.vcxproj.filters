@@ -15,13 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Gengar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="machine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gengar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,6 +33,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="machine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gengar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

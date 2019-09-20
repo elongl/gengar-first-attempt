@@ -155,11 +155,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
-    <ClCompile Include="Gengar.cpp" />
+    <ClCompile Include="gengar.cpp" />
     <ClCompile Include="machine.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client.h" />
+    <ClInclude Include="gengar.h" />
     <ClInclude Include="machine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

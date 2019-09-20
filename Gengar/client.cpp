@@ -6,42 +6,18 @@ using boost::asio::ip::tcp;
 
 void Client::Connect()
 {
-	try
-	{
-		tcp::resolver resolver(m_io);
-		boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "5555"));
-	}
-	catch (std::exception& ex)
-	{
-		std::cerr << ex.what() << std::endl;
-		exit(1);
-	}
+	tcp::resolver resolver(m_io);
+	boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "5555"));
 }
 
-void Client::Send(std::string msg)
+void Client::Send(std::string& data)
 {
-	try
-	{
-		boost::asio::write(m_sock, boost::asio::buffer(msg));
-	}
-	catch (std::exception& ex)
-	{
-		std::cerr << ex.what() << std::endl;
-		exit(1);
-	}
+	boost::asio::write(m_sock, boost::asio::buffer(data));
 }
 
 std::string Client::Receive()
 {
-	std::string msg;
-	try
-	{
-		boost::asio::read(m_sock, boost::asio::buffer(msg));
-		return msg;
-	}
-	catch (std::exception& ex)
-	{
-		std::cerr << ex.what() << std::endl;
-		exit(1);
-	}
+	std::string data;
+	boost::asio::read(m_sock, boost::asio::buffer(data));
+	return data;
 }

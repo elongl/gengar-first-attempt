@@ -13,6 +13,6 @@ private:
 
 public:
 	void Connect();
-	void Send(std::string);
+	void Send(std::string&);
 	std::string Receive();
 };

