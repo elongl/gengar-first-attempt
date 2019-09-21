@@ -7,9 +7,9 @@ using boost::asio::ip::tcp;
 
 void Client::Connect()
 {
-	boost::asio::ip::address cnc_addr = boost::asio::ip::address::from_string("127.0.0.1");
-	unsigned short cnc_port = 5555;
-	tcp::endpoint cnc(cnc_addr, cnc_port);
+	boost::asio::ip::address addr = boost::asio::ip::address::from_string("127.0.0.1");
+	unsigned short port = 27016;
+	tcp::endpoint cnc(addr, port);
 
 	try
 	{
@@ -33,7 +33,7 @@ void Client::Send(std::string&& data)
 std::string Client::Receive()
 {
 	std::string data;
-	data.resize(128);
+	data.resize(1024);
 	m_sock.receive(boost::asio::buffer(data));
 	return data;
 }
