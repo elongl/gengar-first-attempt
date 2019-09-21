@@ -15,7 +15,7 @@ void ReadStream(bp::ipstream& stream, std::string& output)
 	}
 }
 
-std::string Machine::RunShellCommand(std::string cmd)
+std::string Machine::RunShellCommand(std::string& cmd)
 {
 	std::string output;
 	bp::ipstream out_stream, err_stream;

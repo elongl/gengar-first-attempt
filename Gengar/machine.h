@@ -5,5 +5,5 @@
 class Machine
 {
 public:
-	std::string RunShellCommand(std::string);
+	std::string RunShellCommand(std::string&);
 };

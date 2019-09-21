@@ -27,13 +27,15 @@ void Client::Connect()
 
 void Client::Send(std::string&& data)
 {
+	if (data.empty())
+		m_sock.send(boost::asio::buffer("No output.\n"));
 	m_sock.send(boost::asio::buffer(data));
 }
 
 std::string Client::Receive()
 {
 	std::string data;
-	data.resize(4096);
+	data.resize(128);
 	m_sock.receive(boost::asio::buffer(data));
 	return data;
 }
