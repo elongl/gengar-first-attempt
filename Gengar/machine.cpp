@@ -34,7 +34,7 @@ std::string Machine::RunShellCommand(std::string&& cmd)
 	return output;
 }
 
-void Machine::MakePersistent()
+void Machine::Persist()
 {
 	std::ostringstream cmd;
 	const short buff_size = 128;
