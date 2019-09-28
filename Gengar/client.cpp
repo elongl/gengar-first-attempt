@@ -18,7 +18,7 @@ void Client::Connect()
 	catch (boost::system::system_error&)
 	{
 		m_sock.close();
-		Sleep(5 * 1000);
+		Sleep(30 * 1000);
 		Connect();
 	}
 }
