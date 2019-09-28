@@ -1,6 +1,4 @@
-#include <iostream>
 #include <boost/asio.hpp>
-#include <array>
 #include "client.h"
 
 using boost::asio::ip::tcp;
@@ -26,7 +24,7 @@ void Client::Connect()
 void Client::Send(std::string&& data)
 {
 	if (data.empty())
-		m_sock.send(boost::asio::buffer("No output.\n"));
+		m_sock.send(boost::asio::buffer("No output."));
 	m_sock.send(boost::asio::buffer(data));
 }
 

