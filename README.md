@@ -1,4 +1,5 @@
 # TODOs
 - Read entire buffer rather than guessing the size of it.
-- Use `CreateProcess` instead of `popen` for running shell commands.
 - Add upload / download files feature.
+- Use native APIs for task scheduling, and for CreateProcess.
+- Make Gengar a staged payload rather than stageless.
