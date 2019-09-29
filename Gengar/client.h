@@ -7,11 +7,11 @@ using boost::asio::ip::tcp;
 class Client
 {
 private:
-	tcp::socket m_sock;
+	boost::asio::io_service m_io;
+	tcp::socket m_sock{ m_io };
 
 public:
-	Client();
 	void Connect();
-	void Send(std::string);
+	void Send(std::string&&);
 	std::string Receive();
 };
