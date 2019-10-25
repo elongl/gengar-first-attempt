@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <vector>
 
 class Machine
 {
@@ -11,6 +9,7 @@ private:
 	void DeleteGengarSchedule();
 
 public:
+	Machine();
 	std::string RunShellCommand(std::string);
 	void Persist();
 	void Suicide();

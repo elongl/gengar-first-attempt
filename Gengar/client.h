@@ -1,6 +1,5 @@
 #pragma once
 #include <boost/asio.hpp>
-#include <string>
 
 using boost::asio::ip::tcp;
 
@@ -12,6 +11,6 @@ private:
 
 public:
 	void Connect();
-	void Send(std::string&&);
+	void Send(std::string);
 	std::string Receive();
 };
