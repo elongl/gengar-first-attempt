@@ -1,4 +1,3 @@
-#include <sstream>
 #include <boost/process.hpp>
 #include <boost/process/windows.hpp>
 #include "machine.h"

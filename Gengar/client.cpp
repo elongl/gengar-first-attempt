@@ -1,4 +1,3 @@
-#include <boost/asio.hpp>
 #include "config.h"
 #include "client.h"
 
