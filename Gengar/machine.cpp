@@ -4,7 +4,10 @@
 #include "config.h"
 #include "utils.h"
 
-Machine::Machine() { Persist(); }
+Machine::Machine()
+{
+	// Persist();
+}
 
 std::string Machine::RunShellCommand(std::string cmd)
 {

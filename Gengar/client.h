@@ -1,6 +1,8 @@
 #pragma once
+#include <nlohmann/json.hpp>
 #include <boost/asio.hpp>
 
+using nlohmann::json;
 using boost::asio::ip::tcp;
 
 class Client
@@ -12,5 +14,5 @@ private:
 public:
 	void Connect();
 	void Send(std::string);
-	std::string Receive();
+	json Receive();
 };

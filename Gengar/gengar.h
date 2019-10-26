@@ -8,7 +8,7 @@ class Gengar
 private:
 	Machine m_machine;
 	Client m_client;
-	void RouteCommand(std::string, std::string);
+	void RouteCommand(json);
 
 public:
 	void ConnectToCnc();

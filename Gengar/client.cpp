@@ -1,7 +1,6 @@
+#include <nlohmann/json.hpp>
 #include "config.h"
 #include "client.h"
-
-using boost::asio::ip::tcp;
 
 void Client::Connect()
 {
@@ -28,11 +27,10 @@ void Client::Send(std::string data)
 	m_sock.send(boost::asio::buffer(data));
 }
 
-std::string Client::Receive()
+json Client::Receive()
 {
-	std::string data;
-	data.resize(1024);
-	m_sock.receive(boost::asio::buffer(data));
-	data.erase(std::find(data.begin(), data.end(), '\0'), data.end());
-	return data;
+	std::string buff;
+	buff.resize(1024);
+	m_sock.receive(boost::asio::buffer(buff));
+	return json::parse(buff);
 }
