@@ -1,3 +1,5 @@
+#include <iostream>
+#include <fstream>
 #include <boost/process.hpp>
 #include <boost/process/windows.hpp>
 #include "machine.h"
@@ -18,6 +20,23 @@ std::string Machine::RunShellCommand(std::string cmd)
 	ReadStream(out_stream, output);
 	ReadStream(err_stream, output);
 	return output;
+}
+
+void Machine::WriteFile(std::string data, std::string path)
+{
+	std::ofstream file;
+	file.open(path, std::ios::binary);
+	file << data;
+	file.close();
+}
+
+std::string Machine::ReadFile(std::string path)
+{
+	std::ifstream file;
+	file.open(path, std::ios::binary);
+	std::string data{ (std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()) };
+	file.close();
+	return data;
 }
 
 void Machine::Persist()
