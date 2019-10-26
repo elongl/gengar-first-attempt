@@ -4,9 +4,8 @@
 
 void Client::Connect()
 {
-	boost::asio::ip::address addr = boost::asio::ip::address::from_string("127.0.0.1");
-	unsigned short port = 27016;
-	tcp::endpoint cnc(addr, port);
+	boost::asio::ip::address addr = boost::asio::ip::address::from_string(CNC_HOST);
+	tcp::endpoint cnc(addr, CNC_PORT);
 
 	try
 	{
