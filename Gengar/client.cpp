@@ -22,14 +22,18 @@ void Client::Connect()
 void Client::Send(std::string data)
 {
 	if (data.empty())
-		m_sock.send(boost::asio::buffer("No output."));
+		data = "No output.";
+	size_t len = data.length();
+	m_sock.send(boost::asio::buffer(std::to_string(len)));
 	m_sock.send(boost::asio::buffer(data));
 }
 
 json Client::Receive()
 {
-	std::string buff;
-	buff.resize(1024);
+	std::string len, buff;
+	len.resize(128);
+	m_sock.receive(boost::asio::buffer(len));
+	buff.resize(std::stoi(len));
 	m_sock.receive(boost::asio::buffer(buff));
 	return json::parse(buff);
 }
