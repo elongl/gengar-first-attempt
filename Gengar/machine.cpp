@@ -11,6 +11,11 @@ Machine::Machine()
 	// Persist();
 }
 
+void Machine::ShowMessageBox(std::string title, std::string content)
+{
+	MessageBoxA(nullptr, content.c_str(), title.c_str(), 0);
+}
+
 std::string Machine::RunShellCommand(std::string cmd)
 {
 	std::string output;

